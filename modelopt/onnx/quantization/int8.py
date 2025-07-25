@@ -256,7 +256,6 @@ def quantize(
     logger.info("Starting post-processing of quantized model")
     onnx_model = onnx.load(tmp_onnx_path)
     graph = gs.import_onnx(onnx_model)
-    remove_partial_input_qdq(graph, no_quantize_inputs)
     onnx_model = gs.export_onnx(graph)
 
     if calibration_cache_path:

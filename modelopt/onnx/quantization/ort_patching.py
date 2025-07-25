@@ -42,6 +42,7 @@
 """This module contains all the patched functions from ORT."""
 
 import gc
+import itertools
 import tempfile
 import uuid
 from collections.abc import Sequence
@@ -267,7 +268,8 @@ def _select_tensors_to_calibrate(calibrator, model: onnx.ModelProto):
     for node in model.graph.node:
         # Hack: in calibrator.op_types_to_calibrate we pass nodes_to_quantize
         if node.name in calibrator.op_types_to_calibrate:
-            for tensor_name in node.input:
+            # for tensor_name in node.input and node.output: 
+            for tensor_name in itertools.chain(node.input, node.output):
                 if tensor_name in value_infos:
                     vi = value_infos[tensor_name]
                     if (
@@ -1549,7 +1551,7 @@ def _quantize_static(
     op_types_to_quantize=None,
     per_channel=False,
     reduce_range=False,
-    activation_type=QuantType.QInt8,
+    activation_type=QuantType.QUInt8,
     weight_type=QuantType.QInt8,
     nodes_to_quantize=None,
     nodes_to_exclude=None,

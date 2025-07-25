@@ -298,8 +298,8 @@ def configure_ort(
     trt_guided_options = {
         "QuantizeBias": False,
         "ActivationSymmetric": True,
-        "OpTypesToExcludeOutputQuantization": op_types,  # No output quantization
-        "AddQDQPairToWeight": True,  # Instead of quantizing the weights, add QDQ node
+        "OpTypesToExcludeOutputQuantization": [], 
+        "AddQDQPairToWeight": False,  # Instead of quantizing the weights, add QDQ node
         "QDQOpTypePerChannelSupportToAxis": {
             "Conv": 0,  # Cout axis for Conv: [Cout, Cin, k1, k2]
             "ConvTranspose": 1,  # Cout axis for ConvTranspose: [Cin, Cout, k1, k2]

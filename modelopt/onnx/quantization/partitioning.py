@@ -60,6 +60,7 @@ def _build_fusible_partition(
     """
 
     def _is_on_non_residual_path(node: Node) -> bool:
+        # return False
         return bool(
             node.op == "Add"  # Input node should be an Add node
             # The Add node should have a non-residual input
