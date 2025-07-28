@@ -394,7 +394,7 @@ def find_mha_partitions(graph: Graph) -> list[list[Node]]:
     """
     mha_chain_types = [
         [
-            "MatMul",
+            "Softmax",
             "MatMul",
         ],
     ]
