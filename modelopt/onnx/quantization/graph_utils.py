@@ -347,26 +347,27 @@ def filter_quantizable_kgen_heads(
         head_parents = get_parent_nodes(head_node)
         no_quantize_inputs_of_head = []
         has_quantizable_input = False
+        quantizable_kgen_heads.append(partition[0])
 
         # Check each of the parent (input producer for partition head)
         # or predecessor nodes and see if output quantization is needed for them
         # and decide which input of kgen head needs quantization
-        for parent in head_parents:
-            # If the head is consuming output of any quantizable op, then it is quantizable
-            if _is_following_cask_partition(parent) or parent.op in output_quantization_candidates:
-                # The mask add of MHA should not be quantized
-                if _is_mha_epilogue_pattern(head_node, graph):
-                    no_quantize_inputs_of_head.append(
-                        (parent, partition[0], parent.outputs[0].name)
-                    )
-                else:
-                    quantizable_kgen_heads.append(partition[0])
-                    has_quantizable_input = True
-            # If the input from the current parent has no other quantizable consumer, do not quantize that input
-            elif not _has_other_quantizable_consumer(
-                parent.outputs[0], quantizable_kgen_heads, head_node.name
-            ):
-                no_quantize_inputs_of_head.append((parent, partition[0], parent.outputs[0].name))
+        # for parent in head_parents:
+        #     # If the head is consuming output of any quantizable op, then it is quantizable
+        #     if _is_following_cask_partition(parent) or parent.op in output_quantization_candidates:
+        #         # The mask add of MHA should not be quantized
+        #         if _is_mha_epilogue_pattern(head_node, graph):
+        #             no_quantize_inputs_of_head.append(
+        #                 (parent, partition[0], parent.outputs[0].name)
+        #             )
+        #         else:
+        #             quantizable_kgen_heads.append(partition[0])
+        #             has_quantizable_input = True
+        #     # If the input from the current parent has no other quantizable consumer, do not quantize that input
+        #     elif not _has_other_quantizable_consumer(
+        #         parent.outputs[0], quantizable_kgen_heads, head_node.name
+        #     ):
+        #         no_quantize_inputs_of_head.append((parent, partition[0], parent.outputs[0].name))
 
         # If at least one input of Add is quantizable, collect if there is any non-quantizable inputs
         if head_node.op == "Add" and has_quantizable_input:
